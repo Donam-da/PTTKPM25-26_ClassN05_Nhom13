@@ -2,6 +2,10 @@
 
 Ứng dụng web quản lý việc đăng ký học theo tín chỉ cho sinh viên, giảng viên và quản trị viên.
 
+# Thành viên 
+- Đỗ Hoài Nam - 22014002
+- Nguyễn Văn Minh - 22010049
+
 ## Tính năng chính
 
 ### Cho Sinh viên:
@@ -243,3 +247,4 @@ Nếu có vấn đề hoặc câu hỏi, vui lòng tạo issue trên GitHub repo
 ---
 
 **Lưu ý**: Đây là phiên bản development. Trước khi deploy production, hãy cập nhật các cài đặt bảo mật và biến môi trường phù hợp.
+
