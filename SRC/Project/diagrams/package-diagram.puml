@@ -1,0 +1,34 @@
+@startuml
+title Package Diagram - Tuần 6: Kiến trúc phân tầng
+
+package "ui" {
+  [UserController]
+}
+
+package "service" {
+  [UserService]
+  [OrderService]
+  interface IUserService
+  interface IOrderService
+}
+
+package "repository" {
+  [UserRepositoryImpl]
+  [OrderRepositoryImpl]
+  interface IUserRepository
+  interface IOrderRepository
+}
+
+package "domain" {
+  class User
+  class Order
+  class Email
+}
+
+ui --> service : calls
+service --> domain : uses entities/values
+service ..> repository.IUserRepository : depends on
+service ..> repository.IOrderRepository : depends on
+repository --> domain : maps entities
+
+@enduml
