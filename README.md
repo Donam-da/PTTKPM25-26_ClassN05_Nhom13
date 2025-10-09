@@ -1,11 +1,10 @@
 # 🎨 README UI — Hệ thống Quản lý Đăng ký Học theo Tín chỉ
 
-Tài liệu README này **được thiết kế lại** để tập trung vào **trình bày giao diện** cho 12 trang chính (theo các file bạn cung cấp trong `pages.zip`). Không có ảnh chụp màn hình trong gói nén, vì vậy README sẽ mô tả cấu trúc UI, đường dẫn, vai trò sử dụng và thành phần giao diện gợi ý cho từng trang — giúp nhóm dễ triển khai React + Tailwind.
+## Thành viên
+- Đỗ Hoài Nam — 22014002
+- Nguyễn Văn Minh — 22010049
 
-> Nếu bạn muốn, tôi có thể tạo **wireframe ảnh** từ các mô tả này ở lần tiếp theo.
-
----
-
+Tài liệu README này **được thiết kế lại** để tập trung vào **trình bày giao diện** cho 12 giao diện của chương trình quản lí tín chỉ học phần
 ## 1) Tổng quan UI/UX
 - **Mục tiêu**: rõ ràng, nhất quán, hỗ trợ thao tác nhanh trong giờ cao điểm đăng ký.
 - **Thiết kế**: Layout 2 cột (Sidebar + Content), card bo góc, bóng nhẹ, khoảng trắng thoáng.
