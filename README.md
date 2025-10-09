@@ -1,250 +1,172 @@
-# Phần mềm Quản lý Đăng ký Học theo Tín chỉ
+# 🎨 README UI — Hệ thống Quản lý Đăng ký Học theo Tín chỉ
 
-Ứng dụng web quản lý việc đăng ký học theo tín chỉ cho sinh viên, giảng viên và quản trị viên.
+Tài liệu README này **được thiết kế lại** để tập trung vào **trình bày giao diện** cho 12 trang chính (theo các file bạn cung cấp trong `pages.zip`). Không có ảnh chụp màn hình trong gói nén, vì vậy README sẽ mô tả cấu trúc UI, đường dẫn, vai trò sử dụng và thành phần giao diện gợi ý cho từng trang — giúp nhóm dễ triển khai React + Tailwind.
 
-# Thành viên 
-- Đỗ Hoài Nam - 22014002
-- Nguyễn Văn Minh - 22010049
-
-## Tính năng chính
-
-### Cho Sinh viên:
-- Đăng ký/xóa môn học
-- Xem lịch học và lịch thi
-- Theo dõi điểm số và GPA
-- Xem thông tin môn học và tài liệu
-- Quản lý hồ sơ cá nhân
-
-### Cho Giảng viên:
-- Quản lý khóa học
-- Nhập điểm và theo dõi sinh viên
-- Quản lý tài liệu và lịch học
-- Duyệt đăng ký môn học
-
-### Cho Quản trị viên:
-- Quản lý người dùng (sinh viên, giảng viên)
-- Quản lý khóa học và học kỳ
-- Theo dõi thống kê đăng ký
-- Quản lý hệ thống
-
-## Công nghệ sử dụng
-
-### Backend:
-- Node.js + Express.js
-- MongoDB + Mongoose
-- JWT Authentication
-- Express Validator
-- Bcrypt (mã hóa mật khẩu)
-
-### Frontend:
-- React.js 18
-- React Router DOM
-- Tailwind CSS
-- React Hook Form
-- Axios (HTTP client)
-- Lucide React (icons)
-
-## Cài đặt và chạy
-
-### Yêu cầu hệ thống:
-- Node.js (v16 trở lên)
-- MongoDB (v4.4 trở lên)
-- npm hoặc yarn
-
-### Bước 1: Clone và cài đặt dependencies
-
-```bash
-# Clone repository
-git clone <repository-url>
-cd phanmem
-
-# Cài đặt backend dependencies
-npm install
-
-# Cài đặt frontend dependencies
-cd client
-npm install
-cd ..
-```
-
-### Bước 2: Cấu hình môi trường
-
-1. Tạo file `.env` trong thư mục gốc (hoặc copy từ `config.env`):
-```env
-NODE_ENV=development
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/credit_registration
-JWT_SECRET=your_jwt_secret_key_here_change_in_production
-JWT_EXPIRE=7d
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_email_password
-FRONTEND_URL=http://localhost:3000
-```
-
-2. Cập nhật các giá trị phù hợp với môi trường của bạn
-
-### Bước 3: Khởi động MongoDB
-
-```bash
-# Khởi động MongoDB service
-mongod
-
-# Hoặc sử dụng Docker
-docker run -d -p 27017:27017 --name mongodb mongo:latest
-```
-
-### Bước 4: Chạy ứng dụng
-
-#### Chạy Backend:
-```bash
-# Chạy ở chế độ development (với nodemon)
-npm run dev
-
-# Hoặc chạy production
-npm start
-```
-
-#### Chạy Frontend:
-```bash
-# Mở terminal mới
-cd client
-npm start
-```
-
-Ứng dụng sẽ chạy tại:
-- Backend: http://localhost:5000
-- Frontend: http://localhost:3000
-
-## Cấu trúc dự án
-
-```
-phanmem/
-├── server.js                 # Entry point của backend
-├── package.json             # Backend dependencies
-├── config.env               # Biến môi trường
-├── models/                  # MongoDB models
-│   ├── User.js             # Model người dùng
-│   ├── Course.js           # Model khóa học
-│   ├── Registration.js     # Model đăng ký
-│   └── Semester.js         # Model học kỳ
-├── routes/                  # API routes
-│   ├── auth.js             # Xác thực
-│   ├── users.js            # Quản lý người dùng
-│   ├── courses.js          # Quản lý khóa học
-│   ├── registrations.js    # Quản lý đăng ký
-│   └── semesters.js        # Quản lý học kỳ
-├── middleware/              # Middleware
-│   └── auth.js             # JWT authentication
-├── client/                  # React frontend
-│   ├── public/             # Static files
-│   ├── src/                # Source code
-│   │   ├── components/     # React components
-│   │   ├── pages/          # Page components
-│   │   ├── contexts/       # React contexts
-│   │   ├── services/       # API services
-│   │   └── App.js          # Main app component
-│   ├── package.json        # Frontend dependencies
-│   └── tailwind.config.js  # Tailwind CSS config
-└── README.md               # Hướng dẫn này
-```
-
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Đăng ký tài khoản
-- `POST /api/auth/login` - Đăng nhập
-- `GET /api/auth/me` - Lấy thông tin user hiện tại
-- `POST /api/auth/change-password` - Đổi mật khẩu
-
-### Users
-- `GET /api/users` - Lấy danh sách users (Admin)
-- `GET /api/users/profile` - Lấy profile user hiện tại
-- `PUT /api/users/profile` - Cập nhật profile
-- `GET /api/users/students` - Lấy danh sách sinh viên
-
-### Courses
-- `GET /api/courses` - Lấy danh sách khóa học
-- `GET /api/courses/:id` - Lấy chi tiết khóa học
-- `POST /api/courses` - Tạo khóa học mới (Admin/Teacher)
-- `PUT /api/courses/:id` - Cập nhật khóa học
-
-### Registrations
-- `GET /api/registrations` - Lấy danh sách đăng ký
-- `POST /api/registrations` - Đăng ký môn học (Student)
-- `PUT /api/registrations/:id/approve` - Duyệt đăng ký
-- `PUT /api/registrations/:id/drop` - Xóa môn học
-
-## Tài khoản mặc định
-
-Sau khi chạy lần đầu, bạn cần tạo tài khoản admin thông qua API:
-
-```bash
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "firstName": "Admin",
-    "lastName": "User",
-    "email": "admin@example.com",
-    "password": "password123",
-    "role": "admin"
-  }'
-```
-
-## Tính năng nâng cao
-
-- **Email notifications**: Gửi email thông báo đăng ký, điểm số
-- **File upload**: Upload tài liệu khóa học
-- **Real-time updates**: WebSocket cho thông báo real-time
-- **Mobile responsive**: Giao diện tối ưu cho mobile
-- **Export data**: Xuất báo cáo Excel/PDF
-- **Advanced search**: Tìm kiếm nâng cao với filters
-
-## Bảo mật
-
-- JWT token authentication
-- Password hashing với bcrypt
-- Input validation và sanitization
-- Rate limiting
-- CORS configuration
-- Helmet security headers
-
-## Deployment
-
-### Production:
-1. Cập nhật biến môi trường
-2. Build frontend: `cd client && npm run build`
-3. Sử dụng PM2 hoặc Docker để chạy backend
-4. Cấu hình reverse proxy (Nginx)
-
-### Docker:
-```bash
-# Build và chạy với Docker Compose
-docker-compose up -d
-```
-
-## Đóng góp
-
-1. Fork repository
-2. Tạo feature branch
-3. Commit changes
-4. Push to branch
-5. Tạo Pull Request
-
-## License
-
-MIT License - xem file LICENSE để biết thêm chi tiết.
-
-## Hỗ trợ
-
-Nếu có vấn đề hoặc câu hỏi, vui lòng tạo issue trên GitHub repository.
-
-## Tác giả
-
-[Your Name] - [Your Email]
+> Nếu bạn muốn, tôi có thể tạo **wireframe ảnh** từ các mô tả này ở lần tiếp theo.
 
 ---
 
-**Lưu ý**: Đây là phiên bản development. Trước khi deploy production, hãy cập nhật các cài đặt bảo mật và biến môi trường phù hợp.
+## 1) Tổng quan UI/UX
+- **Mục tiêu**: rõ ràng, nhất quán, hỗ trợ thao tác nhanh trong giờ cao điểm đăng ký.
+- **Thiết kế**: Layout 2 cột (Sidebar + Content), card bo góc, bóng nhẹ, khoảng trắng thoáng.
+- **Hệ màu**: trung tính + nhấn màu thương hiệu ở nút chính & trạng thái.
+- **Trạng thái**: loading skeleton, empty state có CTA, lỗi có hướng dẫn khắc phục.
+- **Khả năng truy cập**: focus ring, keyboard nav, tương phản màu WCAG AA.
+- **Phản hồi**: toast/alert, inline validation, progress indicators.
 
+## 2) Các trang giao diện (12)
+#### AdminDashboard
+- **Đường dẫn**: `/admin`
+- **Vai trò**: Quản trị
+- **Mục tiêu UI**:
+  - Tổng quan hệ thống
+  - Số liệu nhanh
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+#### CourseDetail
+- **Đường dẫn**: `/courses/:id`
+- **Vai trò**: Sinh viên / Giảng viên
+- **Mục tiêu UI**:
+  - Chi tiết đề cương
+  - Lớp mở, sĩ số, lịch học
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+#### CourseManagement
+- **Đường dẫn**: `/admin/courses`
+- **Vai trò**: Quản trị / Giảng viên
+- **Mục tiêu UI**:
+  - CRUD môn học
+  - Quản lý đề cương/tài liệu
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+#### Courses
+- **Đường dẫn**: `/courses`
+- **Vai trò**: Sinh viên / Giảng viên / Quản trị
+- **Mục tiêu UI**:
+  - Lọc/ tìm kiếm môn
+  - Đăng ký nhanh từ danh sách
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+#### Dashboard
+- **Đường dẫn**: `/student`
+- **Vai trò**: Sinh viên
+- **Mục tiêu UI**:
+  - Tổng quan lịch học/thi
+  - Thông báo & tiến độ tín chỉ
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+#### Login
+- **Đường dẫn**: `/login`
+- **Vai trò**: Công khai
+- **Mục tiêu UI**:
+  - Xác thực với email/mật khẩu
+  - Quên mật khẩu (link)
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+#### MyRegistrations
+- **Đường dẫn**: `/registrations`
+- **Vai trò**: Sinh viên
+- **Mục tiêu UI**:
+  - Danh sách học phần đã đăng ký
+  - Hủy/đổi lớp (theo kỳ)
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+#### Profile
+- **Đường dẫn**: `/profile`
+- **Vai trò**: Sinh viên / Giảng viên / Quản trị
+- **Mục tiêu UI**:
+  - Cập nhật hồ sơ
+  - Đổi mật khẩu
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+#### Register
+- **Đường dẫn**: `/register`
+- **Vai trò**: Công khai
+- **Mục tiêu UI**:
+  - Tạo tài khoản mới
+  - Xác thực form & thông báo lỗi
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+#### RegistrationManagement
+- **Đường dẫn**: `/admin/registrations`
+- **Vai trò**: Quản trị / Giảng viên
+- **Mục tiêu UI**:
+  - Duyệt đơn đăng ký
+  - Xử lý trùng lịch, vượt tín
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+#### SemesterManagement
+- **Đường dẫn**: `/admin/semesters`
+- **Vai trò**: Quản trị
+- **Mục tiêu UI**:
+  - Tạo kỳ học
+  - Khung thời gian đăng ký
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+#### UserManagement
+- **Đường dẫn**: `/admin/users`
+- **Vai trò**: Quản trị
+- **Mục tiêu UI**:
+  - CRUD người dùng
+  - Phân quyền & reset mật khẩu
+- **Thành phần gợi ý**: Header (role-aware), Sidebar (nếu có), Content card, Data table, Pagination, Filters, Dialog/Drawer, Toast
+
+
+---
+
+## 3) Điều hướng & Phân quyền
+- **React Router**: bảo vệ route theo vai trò (`role: student|teacher|admin`)
+- **Redirect**: sau đăng nhập chuyển đến dashboard theo role
+- **Breadcrumbs**: cho các trang nhiều cấp (Course → Detail)
+
+## 4) Mẫu component (Tailwind) — đề xuất
+- **AppShell**: Header, Sidebar (nav theo role), Main, Footer
+- **DataTable**: table + pagination + sort + filter + row actions
+- **Form**: React Hook Form + zod resolver + inline error
+- **Modal/Drawer**: xác nhận đăng ký/hủy, tạo-sửa nhanh
+- **EmptyState**: icon + mô tả + nút hành động
+- **StatCard**: số liệu nhanh (đăng ký, lớp mở, tín chỉ)
+
+## 5) Quy ước coding
+- **Tách lớp**: `components/`, `pages/`, `services/`, `contexts/`
+- **Dịch vụ API**: axios instance + interceptors (JWT)
+- **UI State**: React Context/Query tùy nhu cầu
+- **CSS**: Tailwind + @apply cho pattern lặp
+- **Icon**: Lucide React, dùng nhất quán
+
+## 6) Tệp nguồn tham chiếu (12 page files)
+- `AdminDashboard.js` — `sandbox:/mnt/data/pages/pages/AdminDashboard.js`
+- `CourseDetail.js` — `sandbox:/mnt/data/pages/pages/CourseDetail.js`
+- `CourseManagement.js` — `sandbox:/mnt/data/pages/pages/CourseManagement.js`
+- `Courses.js` — `sandbox:/mnt/data/pages/pages/Courses.js`
+- `Dashboard.js` — `sandbox:/mnt/data/pages/pages/Dashboard.js`
+- `Login.js` — `sandbox:/mnt/data/pages/pages/Login.js`
+- `MyRegistrations.js` — `sandbox:/mnt/data/pages/pages/MyRegistrations.js`
+- `Profile.js` — `sandbox:/mnt/data/pages/pages/Profile.js`
+- `Register.js` — `sandbox:/mnt/data/pages/pages/Register.js`
+- `RegistrationManagement.js` — `sandbox:/mnt/data/pages/pages/RegistrationManagement.js`
+- `SemesterManagement.js` — `sandbox:/mnt/data/pages/pages/SemesterManagement.js`
+- `UserManagement.js` — `sandbox:/mnt/data/pages/pages/UserManagement.js`
+
+
+Phần **Phụ lục** chứa trích đoạn 40 dòng đầu từ từng file để tiện đối chiếu: [APPENDIX_code_previews.md](sandbox:/mnt/data/APPENDIX_code_previews.md).
+
+---
+
+## 7) Hướng dẫn triển khai nhanh (nhắc lại)
+```bash
+npm install
+npm run dev
+# frontend
+cd client && npm install && npm start
+```
+
+## 8) Gợi ý cải tiến tiếp theo
+- Thêm **ảnh chụp** hoặc **wireframe** cho mỗi trang
+- Tạo bộ **Figma UI Kit** (button, input, table, modal)
+- Sinh sẵn **mẫu mã React** cho từng trang theo mô tả trên
+- Viết test e2e (Playwright) cho các luồng đăng ký chính
+
+---
+
+*README này sinh tự động dựa trên 12 tệp trang React trong gói nén.*
