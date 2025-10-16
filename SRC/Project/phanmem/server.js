@@ -8,6 +8,9 @@ const path = require('path');
 
 const app = express();
 
+// Trust the first proxy - Important for rate limiting behind a proxy (e.g., Heroku, Vercel)
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(helmet());
 app.use(cors());

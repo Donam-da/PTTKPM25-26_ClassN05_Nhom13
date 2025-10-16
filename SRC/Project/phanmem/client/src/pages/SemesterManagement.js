@@ -41,6 +41,20 @@ const SemesterManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (new Date(formData.startDate) >= new Date(formData.endDate)) {
+      toast.error('Ngày bắt đầu học kỳ phải trước ngày kết thúc.');
+      return;
+    }
+    if (new Date(formData.registrationStartDate) >= new Date(formData.registrationEndDate)) {
+      toast.error('Ngày bắt đầu đăng ký phải trước ngày kết thúc đăng ký.');
+      return;
+    }
+    if (new Date(formData.withdrawalDeadline) >= new Date(formData.endDate)) {
+      toast.error('Hạn chót rút môn phải trước ngày kết thúc học kỳ.');
+      return;
+    }
+
     try {
       if (editingSemester) {
         await api.put(`/api/semesters/${editingSemester._id}`, formData);
