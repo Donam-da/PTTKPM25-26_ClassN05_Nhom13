@@ -1,75 +1,128 @@
-# Phần mềm Quản lý Đăng ký Học theo Tín chỉ
+# 📚 Hệ thống Quản lý Đăng ký Học theo Tín chỉ
 
-Ứng dụng web quản lý việc đăng ký học theo tín chỉ cho sinh viên, giảng viên và quản trị viên.
+> README tái thiết kế, trình bày trực quan để báo cáo tổng quan dự án.
 
-# Thành viên 
-- Đỗ Hoài Nam - 22014002
-- Nguyễn Văn Minh - 22010049
+<p align="center">
+  <img src="https://img.shields.io/badge/Backend-Node.js%20%2B%20Express-339933?logo=node.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Database-MongoDB-47A248?logo=mongodb&logoColor=white" />
+  <img src="https://img.shields.io/badge/Frontend-React%2018-61DAFB?logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/Auth-JWT-orange" />
+  <img src="https://img.shields.io/badge/Styles-Tailwind%20CSS-38B2AC?logo=tailwindcss&logoColor=white" />
+</p>
 
-## Tính năng chính
+<p align="center">
+  <a href="#-tinh-nang-chinh">Tính năng</a> ·
+  <a href="#-kien-truc--luu-do">Kiến trúc</a> ·
+  <a href="#-cong-nghe">Công nghệ</a> ·
+  <a href="#-cai-dat--chay">Cài đặt</a> ·
+  <a href="#-api-endpoints">API</a> ·
+  <a href="#-bao-mat">Bảo mật</a> ·
+  <a href="#-deployment">Deployment</a> ·
+  <a href="#-roadmap">Roadmap</a>
+</p>
 
-### Cho Sinh viên:
-- Đăng ký/xóa môn học
-- Xem lịch học và lịch thi
-- Theo dõi điểm số và GPA
-- Xem thông tin môn học và tài liệu
-- Quản lý hồ sơ cá nhân
+---
 
-### Cho Giảng viên:
-- Quản lý khóa học
-- Nhập điểm và theo dõi sinh viên
-- Quản lý tài liệu và lịch học
-- Duyệt đăng ký môn học
+## 👥 Thành viên
+- **Đỗ Hoài Nam** – *22014002*
+- **Nguyễn Văn Minh** – *22010049*
 
-### Cho Quản trị viên:
-- Quản lý người dùng (sinh viên, giảng viên)
-- Quản lý khóa học và học kỳ
-- Theo dõi thống kê đăng ký
-- Quản lý hệ thống
+---
 
-## Công nghệ sử dụng
+## ✨ Tóm tắt dự án
+Hệ thống web hỗ trợ **đăng ký học theo tín chỉ** cho **sinh viên, giảng viên, quản trị viên**: từ đăng ký/xóa môn, xem lịch – tới quản lý khóa học, nhập điểm, phê duyệt và thống kê. 
 
-### Backend:
-- Node.js + Express.js
-- MongoDB + Mongoose
-- JWT Authentication
-- Express Validator
-- Bcrypt (mã hóa mật khẩu)
+---
 
-### Frontend:
-- React.js 18
-- React Router DOM
-- Tailwind CSS
-- React Hook Form
-- Axios (HTTP client)
-- Lucide React (icons)
+## ✅ Tính năng chính
 
-## Cài đặt và chạy
+### 🎓 Cho Sinh viên
+- Đăng ký / xóa học phần (kiểm tra điều kiện, trùng lịch, số tín chỉ)
+- Xem **lịch học** & **lịch thi** (tổng hợp đa học phần)
+- Theo dõi **điểm số** & **GPA** (theo học kỳ/tổng)
+- Xem **thông tin học phần** & **tài liệu**
+- Quản lý **hồ sơ cá nhân**
 
-### Yêu cầu hệ thống:
-- Node.js (v16 trở lên)
-- MongoDB (v4.4 trở lên)
+### 👩‍🏫 Cho Giảng viên
+- Quản lý **khóa học/học phần**
+- Nhập điểm, theo dõi danh sách sinh viên
+- Quản lý **tài liệu**, **lịch học/thi**
+- Duyệt **đăng ký** học phần
+
+### 🛠️ Cho Quản trị viên
+- Quản lý **người dùng** (SV/GV), phân quyền
+- Quản lý **khóa học** & **học kỳ**
+- Theo dõi **thống kê đăng ký**
+- Quản lý **cấu hình hệ thống**
+
+> **Nâng cao**: Email thông báo, tải lên tài liệu, thông báo realtime (WebSocket), xuất **Excel/PDF**, tìm kiếm nâng cao, tối ưu mobile.
+
+---
+
+## 🧭 Kiến trúc & Lưu đồ
+
+```
+Client (React 18 + Tailwind)
+   │   Axios (JWT Interceptor)
+   ▼
+API Gateway (Express.js)
+   │   Middleware: Auth (JWT), Validator, Rate Limiter, Helmet, CORS
+   ▼
+Service Layer (Controllers)
+   │
+   ├── Auth Service      ── đăng ký/đăng nhập/refresh/đổi mật khẩu
+   ├── User Service      ── hồ sơ & phân quyền
+   ├── Course Service    ── khóa học, học phần, tài liệu
+   ├── Reg Service       ── đăng ký/xóa, duyệt, kiểm tra điều kiện
+   └── Semester Service  ── học kỳ, lịch học/thi
+   ▼
+MongoDB (Mongoose Models)
+```
+
+**Sơ đồ dữ liệu (mô tả nhanh):**
+- `User { role: 'student'|'teacher'|'admin', profile, passwordHash }`
+- `Course { code, name, credits, teacher, schedule[], documents[] }`
+- `Semester { name, startDate, endDate, isActive }`
+- `Registration { student, course, status: 'pending'|'approved'|'dropped' }`
+
+---
+
+## 🧰 Công nghệ
+
+### Backend
+- **Node.js + Express.js**, **MongoDB + Mongoose**
+- **JWT Auth**, **bcrypt**, **express-validator**
+- Bảo mật: **Helmet**, **CORS**, **Rate limiting**
+
+### Frontend
+- **React 18**, **React Router DOM**
+- **Tailwind CSS**, **React Hook Form**
+- **Axios**, **Lucide React**
+
+---
+
+## 🚀 Cài đặt & Chạy
+
+### Yêu cầu hệ thống
+- Node.js **v16+**
+- MongoDB **v4.4+**
 - npm hoặc yarn
 
-### Bước 1: Clone và cài đặt dependencies
-
+### 1) Clone & cài đặt
 ```bash
-# Clone repository
+# Clone repo
 git clone <repository-url>
 cd phanmem
 
-# Cài đặt backend dependencies
+# Backend deps
 npm install
 
-# Cài đặt frontend dependencies
-cd client
-npm install
-cd ..
+# Frontend deps
+cd client && npm install && cd ..
 ```
 
-### Bước 2: Cấu hình môi trường
-
-1. Tạo file `.env` trong thư mục gốc (hoặc copy từ `config.env`):
+### 2) Cấu hình môi trường
+Tạo file **`.env`** (hoặc copy từ `config.env`):
 ```env
 NODE_ENV=development
 PORT=5000
@@ -82,108 +135,108 @@ EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_email_password
 FRONTEND_URL=http://localhost:3000
 ```
+> ⚠️ **Bảo mật**: không commit `.env` lên repo công khai.
 
-2. Cập nhật các giá trị phù hợp với môi trường của bạn
-
-### Bước 3: Khởi động MongoDB
-
+### 3) Khởi động MongoDB
 ```bash
-# Khởi động MongoDB service
+# Service mặc định
 mongod
 
-# Hoặc sử dụng Docker
+# Hoặc Docker
 docker run -d -p 27017:27017 --name mongodb mongo:latest
 ```
 
-### Bước 4: Chạy ứng dụng
-
-#### Chạy Backend:
+### 4) Chạy ứng dụng
 ```bash
-# Chạy ở chế độ development (với nodemon)
+# Backend (dev: có nodemon)
 npm run dev
-
-# Hoặc chạy production
+# Backend (prod)
 npm start
-```
 
-#### Chạy Frontend:
-```bash
-# Mở terminal mới
-cd client
-npm start
+# Frontend
+cd client && npm start
 ```
-
-Ứng dụng sẽ chạy tại:
-- Backend: http://localhost:5000
+- Backend: http://localhost:5000  
 - Frontend: http://localhost:3000
 
-## Cấu trúc dự án
+---
 
+## 🗂️ Cấu trúc dự án
 ```
 phanmem/
-├── server.js                 # Entry point của backend
-├── package.json             # Backend dependencies
-├── config.env               # Biến môi trường
-├── models/                  # MongoDB models
-│   ├── User.js             # Model người dùng
-│   ├── Course.js           # Model khóa học
-│   ├── Registration.js     # Model đăng ký
-│   └── Semester.js         # Model học kỳ
-├── routes/                  # API routes
-│   ├── auth.js             # Xác thực
-│   ├── users.js            # Quản lý người dùng
-│   ├── courses.js          # Quản lý khóa học
-│   ├── registrations.js    # Quản lý đăng ký
-│   └── semesters.js        # Quản lý học kỳ
-├── middleware/              # Middleware
-│   └── auth.js             # JWT authentication
-├── client/                  # React frontend
-│   ├── public/             # Static files
-│   ├── src/                # Source code
-│   │   ├── components/     # React components
-│   │   ├── pages/          # Page components
-│   │   ├── contexts/       # React contexts
-│   │   ├── services/       # API services
-│   │   └── App.js          # Main app component
-│   ├── package.json        # Frontend dependencies
-│   └── tailwind.config.js  # Tailwind CSS config
-└── README.md               # Hướng dẫn này
+├── server.js                 # Entry point backend
+├── package.json              # Backend deps & scripts
+├── config.env                # Biến môi trường (mẫu)
+├── models/
+│   ├── User.js
+│   ├── Course.js
+│   ├── Registration.js
+│   └── Semester.js
+├── routes/
+│   ├── auth.js
+│   ├── users.js
+│   ├── courses.js
+│   ├── registrations.js
+│   └── semesters.js
+├── middleware/
+│   └── auth.js               # JWT middleware
+├── client/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── contexts/
+│   │   ├── services/
+│   │   └── App.js
+│   ├── package.json
+│   └── tailwind.config.js
+└── README.md
 ```
 
-## API Endpoints
+---
 
-### Authentication
-- `POST /api/auth/register` - Đăng ký tài khoản
-- `POST /api/auth/login` - Đăng nhập
-- `GET /api/auth/me` - Lấy thông tin user hiện tại
-- `POST /api/auth/change-password` - Đổi mật khẩu
+## 🔌 API Endpoints (v1)
+
+### Auth
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| POST | `/api/auth/register` | Đăng ký tài khoản |
+| POST | `/api/auth/login` | Đăng nhập, trả về JWT |
+| GET | `/api/auth/me` | Lấy thông tin người dùng hiện tại |
+| POST | `/api/auth/change-password` | Đổi mật khẩu |
 
 ### Users
-- `GET /api/users` - Lấy danh sách users (Admin)
-- `GET /api/users/profile` - Lấy profile user hiện tại
-- `PUT /api/users/profile` - Cập nhật profile
-- `GET /api/users/students` - Lấy danh sách sinh viên
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/users` | Danh sách người dùng (Admin) |
+| GET | `/api/users/profile` | Lấy hồ sơ hiện tại |
+| PUT | `/api/users/profile` | Cập nhật hồ sơ |
+| GET | `/api/users/students` | Danh sách sinh viên |
 
 ### Courses
-- `GET /api/courses` - Lấy danh sách khóa học
-- `GET /api/courses/:id` - Lấy chi tiết khóa học
-- `POST /api/courses` - Tạo khóa học mới (Admin/Teacher)
-- `PUT /api/courses/:id` - Cập nhật khóa học
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/courses` | Danh sách khóa học/học phần |
+| GET | `/api/courses/:id` | Chi tiết khóa học |
+| POST | `/api/courses` | Tạo khóa học (Admin/Teacher) |
+| PUT | `/api/courses/:id` | Cập nhật khóa học |
 
 ### Registrations
-- `GET /api/registrations` - Lấy danh sách đăng ký
-- `POST /api/registrations` - Đăng ký môn học (Student)
-- `PUT /api/registrations/:id/approve` - Duyệt đăng ký
-- `PUT /api/registrations/:id/drop` - Xóa môn học
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/registrations` | Danh sách đăng ký |
+| POST | `/api/registrations` | Đăng ký học phần (Student) |
+| PUT | `/api/registrations/:id/approve` | Duyệt đăng ký |
+| PUT | `/api/registrations/:id/drop` | Xóa học phần |
 
-## Tài khoản mặc định
+> **Mẹo**: Sử dụng header `Authorization: Bearer <token>` cho các endpoint yêu cầu đăng nhập.
 
-Sau khi chạy lần đầu, bạn cần tạo tài khoản admin thông qua API:
+---
 
+## 👤 Tài khoản mặc định
+Tạo tài khoản admin lần đầu:
 ```bash
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
+curl -X POST http://localhost:5000/api/auth/register   -H "Content-Type: application/json"   -d '{
     "firstName": "Admin",
     "lastName": "User",
     "email": "admin@example.com",
@@ -192,59 +245,94 @@ curl -X POST http://localhost:5000/api/auth/register \
   }'
 ```
 
-## Tính năng nâng cao
+---
 
-- **Email notifications**: Gửi email thông báo đăng ký, điểm số
-- **File upload**: Upload tài liệu khóa học
-- **Real-time updates**: WebSocket cho thông báo real-time
-- **Mobile responsive**: Giao diện tối ưu cho mobile
-- **Export data**: Xuất báo cáo Excel/PDF
-- **Advanced search**: Tìm kiếm nâng cao với filters
-
-## Bảo mật
-
-- JWT token authentication
-- Password hashing với bcrypt
-- Input validation và sanitization
-- Rate limiting
-- CORS configuration
-- Helmet security headers
-
-## Deployment
-
-### Production:
-1. Cập nhật biến môi trường
-2. Build frontend: `cd client && npm run build`
-3. Sử dụng PM2 hoặc Docker để chạy backend
-4. Cấu hình reverse proxy (Nginx)
-
-### Docker:
-```bash
-# Build và chạy với Docker Compose
-docker-compose up -d
-```
-
-## Đóng góp
-
-1. Fork repository
-2. Tạo feature branch
-3. Commit changes
-4. Push to branch
-5. Tạo Pull Request
-
-## License
-
-MIT License - xem file LICENSE để biết thêm chi tiết.
-
-## Hỗ trợ
-
-Nếu có vấn đề hoặc câu hỏi, vui lòng tạo issue trên GitHub repository.
-
-## Tác giả
-
-[Your Name] - [Your Email]
+## 🔒 Bảo mật
+- **JWT** cho xác thực & phân quyền theo vai trò
+- **bcrypt** băm mật khẩu
+- **Input validation** & **sanitization**
+- **Rate limiting**, **CORS**, **Helmet** headers
+- Ẩn secrets (.env), rotate `JWT_SECRET` định kỳ
 
 ---
 
-**Lưu ý**: Đây là phiên bản development. Trước khi deploy production, hãy cập nhật các cài đặt bảo mật và biến môi trường phù hợp.
+## 🧪 Kiểm thử
+- Unit test (gợi ý): Jest + Supertest cho routes
+- Mock DB: MongoMemoryServer cho test cô lập
+- Lint: ESLint + Prettier
 
+---
+
+## 📦 Deployment
+
+### Production checklist
+1. Cập nhật biến môi trường & secret an toàn (Vault, GitHub Actions secret)
+2. Build frontend: `cd client && npm run build`
+3. Chạy backend bằng **PM2** hoặc **Docker**
+4. Reverse proxy qua **Nginx** (HTTPS với Let’s Encrypt)
+
+### Docker Compose (gợi ý)
+```yaml
+version: "3.9"
+services:
+  api:
+    build: .
+    env_file: .env
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+volumes:
+  mongo_data:
+```
+
+---
+
+## 📈 Thống kê & Báo cáo (gợi ý triển khai)
+- Bảng điều khiển cho **tổng đăng ký theo học kỳ**, **tải môn**, **điểm trung bình**
+- Xuất **Excel/PDF**: báo cáo theo học kỳ, theo lớp
+- WebSocket/Push cho **phê duyệt** & **cảnh báo trùng lịch** realtime
+
+---
+
+## 🗺️ Roadmap
+- [ ] Refresh token & session quản lý đa thiết bị
+- [ ] Bộ lọc nâng cao (tín chỉ, thời khóa biểu, giảng viên)
+- [ ] Import/SIS integration (CSV/Excel)
+- [ ] iCal export lịch học/thi
+- [ ] Trang **Dashboard** theo vai trò
+- [ ] Test E2E (Playwright/Cypress)
+
+---
+
+## 🤝 Đóng góp
+1. Fork repository
+2. Tạo feature branch (`feat/ten-tinh-nang`)
+3. Commit theo Conventional Commits
+4. PR kèm mô tả & ảnh chụp màn hình
+
+---
+
+## 📄 License
+**MIT** – xem file `LICENSE` để biết chi tiết.
+
+---
+
+## 🆘 Hỗ trợ
+Nếu có vấn đề, vui lòng tạo **Issue** trên GitHub hoặc liên hệ qua email quản trị dự án.
+
+**Tác giả (cập nhật):** _Điền thông tin tại đây_
+
+---
+
+> **Ghi chú**: Đây là bản **development**. Trước khi triển khai production, hãy rà soát bảo mật, tối ưu hiệu năng và quy trình CI/CD.
