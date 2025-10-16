@@ -77,7 +77,7 @@ const TeacherCourses = () => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <Link
-                                                to={`/admin/courses/${course._id}`} // Tạm thời link đến trang admin detail, sẽ tạo trang riêng sau
+                                                to={`/teacher/courses/${course._id}`}
                                                 className="text-blue-600 hover:text-blue-900 flex items-center justify-end"
                                             >
                                                 <Eye className="h-5 w-5 mr-1" />

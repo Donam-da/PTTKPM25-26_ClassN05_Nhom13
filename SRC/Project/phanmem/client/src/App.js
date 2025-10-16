@@ -16,6 +16,7 @@ import RegistrationManagement from './pages/RegistrationManagement';
 import SemesterManagement from './pages/SemesterManagement';
 import TeacherDashboard from './pages/TeacherDashboard';
 import TeacherCourses from './pages/TeacherCourses';
+import TeacherCourseDetail from './pages/TeacherCourseDetail';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
@@ -70,6 +71,11 @@ const AppRoutes = () => {
         <Route path="teacher/courses" element={
           <ProtectedRoute allowedRoles={['teacher']}>
             <TeacherCourses />
+          </ProtectedRoute>
+        } />
+        <Route path="teacher/courses/:id" element={
+          <ProtectedRoute allowedRoles={['teacher']}>
+            <TeacherCourseDetail />
           </ProtectedRoute>
         } />
 
