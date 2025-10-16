@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  Home, 
-  BookOpen, 
-  ClipboardList, 
-  User, 
-  Settings, 
-  Users, 
+import {
+  Home,
+  BookOpen,
+  ClipboardList,
+  User,
+  Settings,
+  Users,
   Calendar,
   LogOut,
   Menu,
@@ -40,6 +40,13 @@ const Layout = () => {
     { name: 'Quản lý học kỳ', href: '/admin/semesters', icon: Calendar },
   ];
 
+  const teacherNavigation = [
+    { name: 'Dashboard', href: '/teacher/dashboard', icon: Home },
+    { name: 'Khóa học của tôi', href: '/teacher/courses', icon: BookOpen },
+    { name: 'Duyệt đăng ký', href: '/admin/registrations', icon: ClipboardList },
+    // Thêm các mục khác cho giảng viên ở đây, ví dụ: Quản lý tài liệu, Lịch học...
+  ];
+
   const isActive = (href) => location.pathname === href;
 
   return (
@@ -59,18 +66,17 @@ const Layout = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                  isActive(item.href)
+                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive(item.href)
                     ? 'bg-blue-100 text-blue-900'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                }`}
+                  }`}
                 onClick={() => setSidebarOpen(false)}
               >
                 <item.icon className="mr-3 h-5 w-5" />
                 {item.name}
               </Link>
             ))}
-            {(isAdmin || isTeacher) && (
+            {isAdmin && (
               <>
                 <div className="pt-4 pb-2">
                   <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -81,11 +87,33 @@ const Layout = () => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                      isActive(item.href)
+                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive(item.href)
                         ? 'bg-blue-100 text-blue-900'
                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                    }`}
+                      }`}
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <item.icon className="mr-3 h-5 w-5" />
+                    {item.name}
+                  </Link>
+                ))}
+              </>
+            )}
+            {isTeacher && !isAdmin && (
+              <>
+                <div className="pt-4 pb-2">
+                  <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Giảng viên
+                  </h3>
+                </div>
+                {teacherNavigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive(item.href)
+                        ? 'bg-blue-100 text-blue-900'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      }`}
                     onClick={() => setSidebarOpen(false)}
                   >
                     <item.icon className="mr-3 h-5 w-5" />
@@ -109,17 +137,16 @@ const Layout = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                  isActive(item.href)
+                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive(item.href)
                     ? 'bg-blue-100 text-blue-900'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                }`}
+                  }`}
               >
                 <item.icon className="mr-3 h-5 w-5" />
                 {item.name}
               </Link>
             ))}
-            {(isAdmin || isTeacher) && (
+            {isAdmin && (
               <>
                 <div className="pt-4 pb-2">
                   <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -130,11 +157,32 @@ const Layout = () => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                      isActive(item.href)
+                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive(item.href)
                         ? 'bg-blue-100 text-blue-900'
                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                    }`}
+                      }`}
+                  >
+                    <item.icon className="mr-3 h-5 w-5" />
+                    {item.name}
+                  </Link>
+                ))}
+              </>
+            )}
+            {isTeacher && !isAdmin && (
+              <>
+                <div className="pt-4 pb-2">
+                  <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Giảng viên
+                  </h3>
+                </div>
+                {teacherNavigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive(item.href)
+                        ? 'bg-blue-100 text-blue-900'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      }`}
                   >
                     <item.icon className="mr-3 h-5 w-5" />
                     {item.name}

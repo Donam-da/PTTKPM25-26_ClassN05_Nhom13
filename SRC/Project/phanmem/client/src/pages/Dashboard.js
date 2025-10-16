@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  BookOpen, 
-  Clock, 
-  TrendingUp, 
+import {
+  BookOpen,
+  Clock,
+  TrendingUp,
   Calendar,
   User,
   GraduationCap,
@@ -13,7 +14,8 @@ import {
 import api from '../services/api';
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, isAdmin, isTeacher } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalCourses: 0,
     enrolledCourses: 0,
@@ -26,6 +28,14 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isAdmin) {
+      navigate('/admin');
+      return;
+    }
+    if (isTeacher) {
+      navigate('/teacher/dashboard');
+      return;
+    }
     const fetchDashboardData = async () => {
       try {
         if (user?.role === 'student') {
@@ -47,44 +57,6 @@ const Dashboard = () => {
           });
 
           setRecentRegistrations(registrations.slice(0, 5));
-        } else if (user?.role === 'teacher') {
-          // Fetch teacher-specific data
-          const [coursesRes, registrationsRes] = await Promise.all([
-            api.get('/api/courses/teacher/' + user.id),
-            api.get('/api/registrations')
-          ]);
-
-          const courses = coursesRes.data;
-          const registrations = registrationsRes.data.registrations.filter(
-            r => courses.some(c => c._id === r.course)
-          );
-
-          setStats({
-            totalCourses: courses.length,
-            enrolledCourses: registrations.filter(r => r.status === 'approved').length,
-            completedCourses: registrations.filter(r => r.status === 'completed').length,
-            currentCredits: 0,
-            maxCredits: 0
-          });
-
-          setRecentRegistrations(registrations.slice(0, 5));
-        } else if (user?.role === 'admin') {
-          // Fetch admin-specific data
-          const [usersRes, coursesRes, registrationsRes] = await Promise.all([
-            api.get('/api/users'),
-            api.get('/api/courses'),
-            api.get('/api/registrations')
-          ]);
-
-          setStats({
-            totalCourses: coursesRes.data.courses.length,
-            enrolledCourses: registrationsRes.data.registrations.filter(r => r.status === 'approved').length,
-            completedCourses: registrationsRes.data.registrations.filter(r => r.status === 'completed').length,
-            currentCredits: 0,
-            maxCredits: 0
-          });
-
-          setRecentRegistrations(registrationsRes.data.registrations.slice(0, 5));
         }
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -94,7 +66,7 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
-  }, [user]);
+  }, [user, isAdmin, isTeacher, navigate]);
 
   if (loading) {
     return (

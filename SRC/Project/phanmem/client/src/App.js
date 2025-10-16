@@ -14,6 +14,8 @@ import UserManagement from './pages/UserManagement';
 import CourseManagement from './pages/CourseManagement';
 import RegistrationManagement from './pages/RegistrationManagement';
 import SemesterManagement from './pages/SemesterManagement';
+import TeacherDashboard from './pages/TeacherDashboard';
+import TeacherCourses from './pages/TeacherCourses';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
@@ -45,7 +47,7 @@ const AppRoutes = () => {
       {/* Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      
+
       {/* Protected Routes */}
       <Route path="/" element={
         <ProtectedRoute>
@@ -58,7 +60,19 @@ const AppRoutes = () => {
         <Route path="courses/:id" element={<CourseDetail />} />
         <Route path="my-registrations" element={<MyRegistrations />} />
         <Route path="profile" element={<Profile />} />
-        
+
+        {/* Teacher Routes */}
+        <Route path="teacher/dashboard" element={
+          <ProtectedRoute allowedRoles={['teacher']}>
+            <TeacherDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="teacher/courses" element={
+          <ProtectedRoute allowedRoles={['teacher']}>
+            <TeacherCourses />
+          </ProtectedRoute>
+        } />
+
         {/* Admin Routes */}
         <Route path="admin" element={
           <ProtectedRoute allowedRoles={['admin']}>
@@ -86,7 +100,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } />
       </Route>
-      
+
       {/* Catch all route */}
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
