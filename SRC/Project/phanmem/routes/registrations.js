@@ -436,4 +436,46 @@ router.put('/:id/grade', [
   }
 });
 
+// @route   DELETE /api/registrations/:id
+// @desc    Delete a registration
+// @access  Private (Admin only)
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    const registration = await Registration.findById(req.params.id).populate('course');
+
+    if (!registration) {
+      return res.status(404).json({ message: 'Registration not found' });
+    }
+
+    // If registration was approved or pending, update counts
+    if (['pending', 'approved'].includes(registration.status)) {
+      // Update course current students count
+      const course = await Course.findById(registration.course._id);
+      if (course) {
+        course.currentStudents = Math.max(0, course.currentStudents - 1);
+        await course.save();
+      }
+
+      // Update student current credits
+      const student = await User.findById(registration.student);
+      if (student && course) {
+        student.currentCredits = Math.max(0, student.currentCredits - course.credits);
+        await student.save();
+      }
+    }
+
+    await Registration.findByIdAndDelete(req.params.id);
+
+    res.json({ message: 'Registration deleted successfully' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router; 

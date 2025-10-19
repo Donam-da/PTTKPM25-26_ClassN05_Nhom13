@@ -48,6 +48,19 @@ const RegistrationManagement = () => {
     }
   };
 
+  const handleDelete = async (registrationId) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa vĩnh viễn đăng ký này? Hành động này không thể hoàn tác.')) {
+      try {
+        await api.delete(`/api/registrations/${registrationId}`);
+        toast.success('Xóa đăng ký thành công');
+        fetchRegistrations();
+      } catch (error) {
+        console.error('Error deleting registration:', error);
+        toast.error(error.response?.data?.message || 'Lỗi khi xóa đăng ký');
+      }
+    }
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending':
@@ -84,9 +97,9 @@ const RegistrationManagement = () => {
 
   const filteredRegistrations = registrations.filter(registration => {
     const matchesSearch = registration.student?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         registration.student?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         registration.course?.courseName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         registration.course?.courseCode?.toLowerCase().includes(searchTerm.toLowerCase());
+      registration.student?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registration.course?.courseName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registration.course?.courseCode?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = !statusFilter || registration.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -103,7 +116,7 @@ const RegistrationManagement = () => {
     <div className="p-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">Quản lý đăng ký khóa học</h1>
-        
+
         <div className="flex gap-4 mb-4">
           <input
             type="text"
@@ -174,6 +187,14 @@ const RegistrationManagement = () => {
                         Từ chối
                       </button>
                     </>
+                  )}
+                  {['pending', 'approved'].includes(registration.status) && (
+                    <button
+                      onClick={() => handleDelete(registration._id)}
+                      className="text-red-600 hover:text-red-900 text-sm font-medium"
+                    >
+                      Xóa
+                    </button>
                   )}
                 </div>
               </div>
