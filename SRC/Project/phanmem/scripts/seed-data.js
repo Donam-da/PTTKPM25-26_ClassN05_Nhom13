@@ -38,7 +38,7 @@ const seedData = async () => {
                 startDate: new Date('2024-09-01'),
                 endDate: new Date('2024-12-31'),
                 registrationStartDate: new Date('2024-08-15'),
-                registrationEndDate: new Date('2024-12-15'),
+                registrationEndDate: new Date('2024-08-31'),
                 withdrawalDeadline: new Date('2024-10-15'),
                 isActive: true,
                 isCurrent: true,
