@@ -45,7 +45,7 @@ Hệ thống web hỗ trợ **đăng ký học theo tín chỉ** cho **sinh viê
 
 ### 👩‍🏫 Cho Giảng viên
 - Quản lý **khóa học/học phần**
-- Nhập điểm, theo dõi danh sách sinh viên
+- Theo dõi danh sách sinh viên
 - Quản lý **tài liệu**, **lịch học/thi**
 - Duyệt **đăng ký** học phần
 
@@ -336,3 +336,4 @@ Nếu có vấn đề, vui lòng tạo **Issue** trên GitHub hoặc liên hệ 
 ---
 
 > **Ghi chú**: Đây là bản **development**. Trước khi triển khai production, hãy rà soát bảo mật, tối ưu hiệu năng và quy trình CI/CD.
+
