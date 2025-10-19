@@ -11,7 +11,11 @@
     "install-client": "cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build"
   },
-  "keywords": ["education", "course-management", "credit-system"],
+  "keywords": [
+    "education",
+    "course-management",
+    "credit-system"
+  ],
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
@@ -31,6 +35,3 @@
     "nodemon": "^3.0.1"
   }
 }
-
-
-
