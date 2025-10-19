@@ -41,7 +41,7 @@ const MyRegistrations = () => {
   };
 
   const handleDrop = async (registrationId) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa khóa học này?')) {
+    if (!window.confirm('Bạn có chắc chắn muốn hủy đăng ký khóa học này?')) {
       return;
     }
 
@@ -51,7 +51,7 @@ const MyRegistrations = () => {
       fetchRegistrations(); // Refresh list
     } catch (error) {
       console.error('Error dropping course:', error);
-      toast.error('Không thể xóa khóa học');
+      toast.error(error.response?.data?.message || 'Không thể hủy đăng ký');
     }
   };
 
@@ -60,7 +60,7 @@ const MyRegistrations = () => {
       case 'approved': return 'text-green-600 bg-green-100';
       case 'pending': return 'text-yellow-600 bg-yellow-100';
       case 'rejected': return 'text-red-600 bg-red-100';
-      case 'dropped': return 'text-gray-600 bg-gray-100';
+      case 'dropped': return 'text-gray-500 bg-gray-100';
       case 'completed': return 'text-blue-600 bg-blue-100';
       default: return 'text-gray-600 bg-gray-100';
     }
@@ -71,7 +71,7 @@ const MyRegistrations = () => {
       case 'approved': return 'Đã duyệt';
       case 'pending': return 'Chờ duyệt';
       case 'rejected': return 'Từ chối';
-      case 'dropped': return 'Đã xóa';
+      case 'dropped': return 'Đã hủy';
       case 'completed': return 'Hoàn thành';
       default: return status;
     }
@@ -326,13 +326,13 @@ const MyRegistrations = () => {
                       Chi tiết
                     </Link>
 
-                    {registration.status === 'approved' && (
+                    {registration.status === 'pending' && (
                       <button
                         onClick={() => handleDrop(registration._id)}
                         className="inline-flex items-center px-3 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
-                        Xóa
+                        Hủy đăng ký
                       </button>
                     )}
                   </div>

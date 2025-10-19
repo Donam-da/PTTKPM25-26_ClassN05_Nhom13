@@ -324,31 +324,48 @@ router.put('/:id/drop', auth, async (req, res) => {
       return res.status(403).json({ message: 'Not authorized' });
     }
 
-    if (registration.status !== 'approved') {
-      return res.status(400).json({ message: 'Can only drop approved registrations' });
+    // Handle cancellation for 'pending' registrations by deleting them
+    if (registration.status === 'pending') {
+      await Registration.findByIdAndDelete(req.params.id);
+
+      // Revert student credits and course student count
+      const course = await Course.findById(registration.course._id);
+      if (course) {
+        course.currentStudents = Math.max(0, course.currentStudents - 1);
+        await course.save();
+      }
+      const student = await User.findById(req.user.id);
+      if (student && course) {
+        student.currentCredits = Math.max(0, student.currentCredits - course.credits);
+        await student.save();
+      }
+
+      return res.json({ message: 'Registration cancelled successfully' });
     }
 
-    // Check if drop deadline has passed
-    if (new Date() > registration.semester.addDropEndDate) {
-      return res.status(400).json({ message: 'Drop deadline has passed' });
+    // Handle dropping for 'approved' registrations
+    if (registration.status === 'approved') {
+      // Check if drop deadline has passed
+      if (registration.semester.withdrawalDeadline && new Date() > new Date(registration.semester.withdrawalDeadline)) {
+        return res.status(400).json({ message: 'Đã qua hạn chót hủy học phần.' });
+      }
+
+      registration.status = 'dropped';
+      registration.dropDate = new Date();
+      await registration.save();
+
+      // Update course student count and student credits
+      const course = await Course.findById(registration.course._id);
+      course.currentStudents = Math.max(0, course.currentStudents - 1);
+      await course.save();
+      const student = await User.findById(req.user.id);
+      student.currentCredits = Math.max(0, student.currentCredits - registration.course.credits);
+      await student.save();
+
+      return res.json(registration);
     }
 
-    registration.status = 'dropped';
-    registration.dropDate = new Date();
-
-    await registration.save();
-
-    // Update course current students count
-    const course = await Course.findById(registration.course._id);
-    course.currentStudents = Math.max(0, course.currentStudents - 1);
-    await course.save();
-
-    // Update student current credits
-    const student = await User.findById(req.user.id);
-    student.currentCredits = Math.max(0, student.currentCredits - registration.course.credits);
-    await student.save();
-
-    res.json(registration);
+    return res.status(400).json({ message: 'Không thể hủy đăng ký ở trạng thái này.' });
   } catch (error) {
     console.error(error.message);
     if (error.kind === 'ObjectId') {
